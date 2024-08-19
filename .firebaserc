@@ -1,0 +1,12 @@
+{
+  "projects": {
+    "default": "backend-condominio-rezende"
+  },
+  "targets": {},
+  "etags": {
+    "backend-condominio-rezende": {
+      "extensionInstances": {}
+    }
+  },
+  "dataconnectEmulatorConfig": {}
+}
