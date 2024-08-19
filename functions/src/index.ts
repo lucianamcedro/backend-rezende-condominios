@@ -111,7 +111,7 @@ app.get('/user/:cpf', async (req: express.Request, res: express.Response) => {
           placaCarro: userData.placaCarro,
           diasDentroCondominio: userData.diasDentroCondominio,
           apartamento: userData.apartamento,
-          qrCodeUrl: userData.qrCodeUrl
+          qrCodeUrl: userData.qrCodeUrl 
         });
       } else {
         res.status(404).send('Usuário não encontrado');
@@ -121,6 +121,7 @@ app.get('/user/:cpf', async (req: express.Request, res: express.Response) => {
       res.status(500).send('Erro ao recuperar dados do usuário: ' + err.message);
     }
   });
+  
   
 // Rota de cadastro de visitante
 app.post('/visitor', async (req: express.Request, res: express.Response) => {
