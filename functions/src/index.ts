@@ -50,7 +50,6 @@ app.post('/register', async (req: express.Request, res: express.Response) => {
   }
 });
 
-
 app.post('/login', async (req: express.Request, res: express.Response) => {
   const { cpf, password } = req.body;
 
@@ -74,6 +73,35 @@ app.post('/login', async (req: express.Request, res: express.Response) => {
   } catch (error) {
     const err = error as Error;
     res.status(500).send('Erro ao fazer login: ' + err.message);
+  }
+});
+
+app.get('/user/:cpf', async (req: express.Request, res: express.Response) => {
+  const { cpf } = req.params;
+
+  if (!cpf) {
+    return res.status(400).send('CPF é obrigatório');
+  }
+
+  try {
+    const userDoc = await db.collection('users').doc(cpf).get();
+
+    if (!userDoc.exists) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+    const userData = userDoc.data();
+    if (!userData) {
+      return res.status(404).send('Usuário não encontrado');
+    }
+
+
+    const { password, ...userWithoutPassword } = userData;
+
+    res.status(200).json(userWithoutPassword);
+  } catch (error) {
+    const err = error as Error;
+    res.status(500).send('Erro ao recuperar dados do usuário: ' + err.message);
   }
 });
 
