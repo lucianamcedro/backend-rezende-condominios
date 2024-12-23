@@ -8,7 +8,6 @@ import fs from 'fs';
 import bcrypt from 'bcryptjs';
 import cors from 'cors'; 
 
-// Verifique se o arquivo JSON existe
 const serviceAccountPath = path.join(__dirname, '../backend-condominio-rezende-firebase-adminsdk-mipbm-9b0f2a4350.json');
 
 if (!fs.existsSync(serviceAccountPath)) {
@@ -25,19 +24,17 @@ admin.initializeApp({
 const db = admin.firestore();
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' })); // Adiciona o middleware cors para permitir todas as origens
+app.use(cors({ origin: '*' }));
 
 // Rota de registro de usuário
 app.post('/register', async (req: express.Request, res: express.Response) => {
   const { cpf, password, nome, endereco, modeloCarro, placaCarro, diasDentroCondominio, apartamento } = req.body;
 
-  // Verifica se nome, cpf e senha estão presentes
   if (!cpf || !password || !nome) {
     return res.status(400).send('Nome, CPF e senha são obrigatórios');
   }
 
   try {
-    // Verifica se o CPF já está cadastrado
     const existingUser = await db.collection('users').doc(cpf).get();
     if (existingUser.exists) {
       return res.status(400).send('CPF já registrado');
@@ -45,14 +42,12 @@ app.post('/register', async (req: express.Request, res: express.Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Dados do usuário a serem salvos
     const userData: any = {
       cpf,
       password: hashedPassword,
       nome,
     };
 
-    // Adiciona campos opcionais se fornecidos
     if (endereco) userData.endereco = endereco;
     if (modeloCarro) userData.modeloCarro = modeloCarro;
     if (placaCarro) userData.placaCarro = placaCarro;
@@ -60,12 +55,9 @@ app.post('/register', async (req: express.Request, res: express.Response) => {
     if (apartamento) userData.apartamento = apartamento;
 
     await db.collection('users').doc(cpf).set(userData);
-
-    // Gerar QR Code
     const qrCodeData = JSON.stringify({ cpf });
     const qrCodeUrl = await qrcode.toDataURL(qrCodeData);
 
-    // Armazenar QR Code no Firestore
     await db.collection('users').doc(cpf).update({
       qrCodeUrl
     });
@@ -200,10 +192,8 @@ app.post('/visitor', async (req: express.Request, res: express.Response) => {
   }
 
   try {
-      // Gerar ID único para o visitante
-      const visitorId = admin.firestore().collection('visitors').doc().id;
 
-      // Armazenar dados do visitante
+      const visitorId = admin.firestore().collection('visitors').doc().id;
       await db.collection('visitors').doc(visitorId).set({
           nome,
           placa,
@@ -214,12 +204,10 @@ app.post('/visitor', async (req: express.Request, res: express.Response) => {
           telefone,
           observacao
       });
-
-      // Gerar QR Code com ID do visitante
+ 
       const qrCodeData = JSON.stringify({ visitorId });
       const qrCodeUrl = await qrcode.toDataURL(qrCodeData);
 
-      // Armazenar QR Code no Firestore
       await db.collection('visitors').doc(visitorId).update({
           qrCodeUrl
       });
@@ -245,15 +233,15 @@ app.get('/visitor/:visitorId', async (req: express.Request, res: express.Respons
       const visitorData = visitorDoc.data();
       if (visitorData) {
           res.status(200).json({
-              nome: visitorData.nome ?? '',
-              placa: visitorData.placa ?? '',
-              quantidadeDias: visitorData.quantidadeDias ?? '',
-              dataEntrada: visitorData.dataEntrada ?? '',
-              nomeProprietario: visitorData.nomeProprietario ?? '',
-              apartamento: visitorData.apartamento ?? '',
-              telefone: visitorData.telefone ?? '',
-              observacao: visitorData.observacao ?? '',
-              qrCodeUrl: visitorData.qrCodeUrl ?? ''
+              nome: visitorData.nome,
+              placa: visitorData.placa,
+              quantidadeDias: visitorData.quantidadeDias,
+              dataEntrada: visitorData.dataEntrada,
+              nomeProprietario: visitorData.nomeProprietario,
+              apartamento: visitorData.apartamento,
+              telefone: visitorData.telefone,
+              observacao: visitorData.observacao,
+              qrCodeUrl: visitorData.qrCodeUrl
           });
       } else {
           res.status(404).send('Visitante não encontrado');
@@ -263,6 +251,7 @@ app.get('/visitor/:visitorId', async (req: express.Request, res: express.Respons
       res.status(500).send('Erro ao recuperar dados do visitante: ' + err.message);
   }
 });
+
 
 // Rota para atualizar dados do visitante
 app.put('/visitor/:visitorId', async (req: express.Request, res: express.Response) => {
