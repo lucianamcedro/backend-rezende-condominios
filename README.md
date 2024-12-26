@@ -101,11 +101,3 @@ Se você tiver alguma dúvida, sinta-se à vontade para entrar em contato:
 - **LinkedIn**: [Luciana Cedro]([https://www.linkedin.com/in/seulinkedin](https://www.linkedin.com/in/lucianamcedro/))
 ```
 
-### Explicação dos componentes do README:
-1. **Título e Descrição**: Fornece uma visão geral do projeto.
-2. **Tecnologias Utilizadas**: Lista as tecnologias e ferramentas usadas no projeto.
-3. **Instalação**: Passos detalhados para configurar e executar o projeto localmente.
-4. **Endpoints da API**: Documentação dos endpoints disponíveis, incluindo métodos HTTP, parâmetros e exemplos de resposta.
-5. **Contribuição**: Instruções sobre como contribuir para o projeto.
-6. **Licença**: Informações sobre a licença do projeto.
-7. **Contato**: Informações de contato para dúvidas ou feedback.
