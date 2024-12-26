@@ -1,103 +1,265 @@
-# Projeto Backend
+# Sistema de Gerenciamento de Usuários e Visitantes
 
-```markdown
-
-
-Este é um projeto de backend desenvolvido com Node.js e Express, que oferece uma API RESTful para gerenciar usuários e visitantes em um sistema. O projeto utiliza o Firebase para funcionalidades de autenticação e armazenamento de dados.
+Este projeto é um sistema de gerenciamento de usuários e visitantes para condomínios, permitindo registrar, autenticar e gerenciar informações de usuários e visitantes, além de gerar códigos QR para facilitar o acesso.
 
 ## Tecnologias Utilizadas
 
-- **Node.js**: Ambiente de execução JavaScript no servidor.
-- **Express**: Framework web para Node.js.
-- **Firebase**: Serviço de backend para autenticação e armazenamento.
-- **CORS**: Middleware para permitir requisições de diferentes origens.
-- **Body-parser**: Middleware para análise do corpo das requisições.
+- Node.js
+- Express
+- Firebase
+- bcryptjs (para hash de senhas)
+- QRCode (para geração de QR Codes)
+
+## Funcionalidades
+
+- Registro de usuários
+- Login de usuários
+- Obtenção, atualização e deleção de informações de usuários
+- Registro de visitantes
+- Obtenção, atualização e deleção de informações de visitantes
+- Geração de códigos QR para usuários e visitantes
+
+## Pré-requisitos
+
+- Node.js
+- Firebase CLI
+- Conta no Firebase para configuração do banco de dados
 
 ## Instalação
 
-1. **Clone o repositório**:
-
+1. Clone este repositório:
    ```bash
-   git clone https://github.com/lucianamcedro/backend-rezende/tree/main
-   cd backend-rezende
+   git clone https://github.com/seuusuario/seu-repositorio.git
+   cd seu-repositorio
    ```
 
-2. **Instale as dependências**:
-
+2. Instale as dependências:
    ```bash
    npm install
    ```
 
-3. **Configure o Firebase**: Certifique-se de ter um projeto Firebase configurado e adicione suas credenciais no arquivo `firebaseConfig.js`.
+3. Configure o Firebase:
+   - Crie um projeto no Firebase.
+   - No console do Firebase, crie as coleções `users` e `visitors`.
+   - Configure as credenciais do Firebase no arquivo `config/firebaseConfig.js`.
 
-4. **Inicie o servidor**:
-
+4. Execute o servidor:
    ```bash
    npm start
    ```
 
-   O servidor será iniciado na porta `3000` ou na porta definida na variável de ambiente `PORT`.
+# API de Cadastro de Usuários e Visitantes
 
-## Endpoints da API
+## Endpoints
 
-### Usuários
+### 1. **Registrar Usuário**
 
-- **Registrar Usuário**
-  - `POST /api/register`
-  - **Body**: `{ "nome": "string", "cpf": "string", "senha": "string", ... }`
-  - **Resposta**: 200 OK, `{ "mensagem": "Usuário registrado com sucesso" }`
+**POST** `/api/register`
 
-- **Login**
-  - `POST /api/login`
-  - **Body**: `{ "cpf": "string", "senha": "string" }`
-  - **Resposta**: 200 OK, `{ "token": "string" }`
+**Descrição**: Registra um novo usuário no sistema.
 
-- **Obter Usuário**
-  - `GET /api/user/:cpf`
-  - **Resposta**: 200 OK, `{ "nome": "string", "cpf": "string", ... }`
+**Body**:
+```json
+{
+  "nome": "string",
+  "cpf": "string",
+  "senha": "string",
+  "endereco": "string",
+  "modeloCarro": "string",
+  "placaCarro": "string",
+  "diasDentroCondominio": "number",
+  "apartamento": "string"
+}
+```
 
-- **Atualizar Usuário**
-  - `PUT /api/user/:cpf`
-  - **Body**: `{ "nome": "string", ... }`
-  - **Resposta**: 200 OK, `{ "mensagem": "Usuário atualizado com sucesso" }`
+**Resposta**:
+```json
+{
+  "mensagem": "Usuário registrado com sucesso",
+  "qrCodeUrl": "string"
+}
+```
 
-- **Deletar Usuário**
-  - `DELETE /api/user/:cpf`
-  - **Resposta**: 200 OK, `{ "mensagem": "Usuário deletado com sucesso" }`
+### 2. **Login**
 
-### Visitantes
+**POST** `/api/login`
 
-- **Registrar Visitante**
-  - `POST /api/visitor`
-  - **Body**: `{ "nome": "string", "documento": "string", ... }`
-  - **Resposta**: 200 OK, `{ "mensagem": "Visitante registrado com sucesso" }`
+**Descrição**: Realiza o login do usuário.
 
-- **Obter Visitante**
-  - `GET /api/visitor/:visitorId`
-  - **Resposta**: 200 OK, `{ "nome": "string", "documento": "string", ... }`
+**Body**:
+```json
+{
+  "cpf": "string",
+  "senha": "string"
+}
+```
 
-- **Atualizar Visitante**
-  - `PUT /api/visitor/:visitorId`
-  - **Body**: `{ "nome": "string", ... }`
-  - **Resposta**: 200 OK, `{ "mensagem": "Visitante atualizado com sucesso" }`
+**Resposta**:
+```json
+{
+  "token": "string"
+}
+```
 
-- **Deletar Visitante**
-  - `DELETE /api/visitor/:visitorId`
-  - **Resposta**: 200 OK, `{ "mensagem": "Visitante deletado com sucesso" }`
+### 3. **Obter Usuário**
+
+**GET** `/api/user/:cpf`
+
+**Descrição**: Recupera os dados de um usuário pelo CPF.
+
+**Resposta**:
+```json
+{
+  "nome": "string",
+  "cpf": "string",
+  "endereco": "string",
+  "modeloCarro": "string",
+  "placaCarro": "string",
+  "diasDentroCondominio": "number",
+  "apartamento": "string",
+  "qrCodeUrl": "string"
+}
+```
+
+### 4. **Atualizar Usuário**
+
+**PUT** `/api/user/:cpf`
+
+**Descrição**: Atualiza os dados de um usuário.
+
+**Body**:
+```json
+{
+  "nome": "string",
+  "endereco": "string",
+  "modeloCarro": "string",
+  "placaCarro": "string",
+  "diasDentroCondominio": "number",
+  "apartamento": "string"
+}
+```
+
+**Resposta**:
+```json
+{
+  "mensagem": "Usuário atualizado com sucesso"
+}
+```
+
+### 5. **Deletar Usuário**
+
+**DELETE** `/api/user/:cpf`
+
+**Descrição**: Deleta um usuário do sistema.
+
+**Resposta**:
+```json
+{
+  "mensagem": "Usuário deletado com sucesso"
+}
+```
+
+---
+
+### 6. **Registrar Visitante**
+
+**POST** `/api/visitor`
+
+**Descrição**: Registra um visitante no sistema.
+
+**Body**:
+```json
+{
+  "nome": "string",
+  "documento": "string",
+  "placa": "string",
+  "quantidadeDias": "number",
+  "dataEntrada": "string (formato ISO 8601)",
+  "nomeProprietario": "string",
+  "apartamento": "string",
+  "telefone": "string",
+  "observacao": "string"
+}
+```
+
+**Resposta**:
+```json
+{
+  "mensagem": "Visitante registrado com sucesso",
+  "visitorId": "string",
+  "qrCodeUrl": "string"
+}
+```
+
+### 7. **Obter Visitante**
+
+**GET** `/api/visitor/:visitorId`
+
+**Descrição**: Recupera os dados de um visitante pelo ID.
+
+**Resposta**:
+```json
+{
+  "nome": "string",
+  "documento": "string",
+  "placa": "string",
+  "quantidadeDias": "number",
+  "dataEntrada": "string (formato ISO 8601)",
+  "nomeProprietario": "string",
+  "apartamento": "string",
+  "telefone": "string",
+  "observacao": "string",
+  "qrCodeUrl": "string"
+}
+```
+
+### 8. **Atualizar Visitante**
+
+**PUT** `/api/visitor/:visitorId`
+
+**Descrição**: Atualiza os dados de um visitante.
+
+**Body**:
+```json
+{
+  "nome": "string",
+  "documento": "string",
+  "placa": "string",
+  "quantidadeDias": "number",
+  "dataEntrada": "string (formato ISO 8601)",
+  "nomeProprietario": "string",
+  "apartamento": "string",
+  "telefone": "string",
+  "observacao": "string"
+}
+```
+
+**Resposta**:
+```json
+{
+  "mensagem": "Visitante atualizado com sucesso"
+}
+```
+
+### 9. **Deletar Visitante**
+
+**DELETE** `/api/visitor/:visitorId`
+
+**Descrição**: Deleta um visitante do sistema.
+
+**Resposta**:
+```json
+{
+  "mensagem": "Visitante deletado com sucesso"
+}
+```
+
+---
 
 ## Contribuição
 
-Sinta-se à vontade para contribuir com este projeto. Faça um fork do repositório e crie uma nova branch para suas modificações. Envie um pull request para discutir suas alterações.
+Sinta-se à vontade para enviar pull requests ou abrir issues para melhorias e correções.
 
 ## Licença
 
-Este projeto está sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## Contato
-
-Se você tiver alguma dúvida, sinta-se à vontade para entrar em contato:
-
-- **Email**: luciana_cedro@hotmail.com
-- **LinkedIn**: [Luciana Cedro]([https://www.linkedin.com/in/seulinkedin](https://www.linkedin.com/in/lucianamcedro/))
-```
-
+Este projeto está licenciado sob a [MIT License](LICENSE).
