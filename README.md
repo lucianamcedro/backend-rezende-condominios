@@ -98,7 +98,7 @@ Este projeto está sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para m
 Se você tiver alguma dúvida, sinta-se à vontade para entrar em contato:
 
 - **Email**: luciana_cedro@hotmail.com
-- **LinkedIn**: [seulinkedin]([https://www.linkedin.com/in/seulinkedin](https://www.linkedin.com/in/lucianamcedro/))
+- **LinkedIn**: [Luciana Cedro]([https://www.linkedin.com/in/seulinkedin](https://www.linkedin.com/in/lucianamcedro/))
 ```
 
 ### Explicação dos componentes do README:
