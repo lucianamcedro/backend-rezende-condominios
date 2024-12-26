@@ -29,8 +29,8 @@ Este projeto é um sistema de gerenciamento de usuários e visitantes para condo
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seuusuario/seu-repositorio.git
-   cd seu-repositorio
+   git clone https://github.com/lucianamcedro/backend-rezende.git
+   cd backend-rezende
    ```
 
 2. Instale as dependências:
